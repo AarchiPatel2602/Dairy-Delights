@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us - Dairy Delights</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe0b2, #ffb74d);
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    h2 {
+      color: #ff6f00;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 20px;
+      color: #555;
+      font-size: 15px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #ff9800;
+      outline: none;
+    }
+
+    button {
+      background-color: #ff6f00;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #e65100;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #333;
+      color: white;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .back-btn:hover {
+      background-color: #222;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 40px 16px;
+        padding: 25px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      .back-btn {
+        top: 10px;
+        left: 10px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+
+  <script>
+    function validateEmail(event) {
+      var email = document.getElementById("email").value.toLowerCase();
+      if (!email.endsWith("@gmail.com") && !email.endsWith("@yahoo.com")) {
+        alert("Only 'gmail.com' or 'yahoo.com' emails are allowed.");
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- Back Button -->
+  <button class="back-btn" onclick="window.location.href='home.php';">← Back to Home</button>
+
+  <div class="container">
+    <h2>Contact Us</h2>
+    <p>We value your feedback. Please fill out the form below.</p>
+    <form action="save_feedback.php" method="post" onsubmit="return validateEmail(event);">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" id="email" placeholder="Your Email" required />
+      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Feedback</button>
+    </form>
+  </div>
+
+</body>
+</html>

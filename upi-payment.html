@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment</title>
+    <style>
+        /* Animated Background */
+        @keyframes gradientBG {
+            0% { background: #c58346; }
+            50% { background: #d16a34; }
+            100% { background: #c58346; }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            animation: gradientBG 5s infinite alternate;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .payment-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            width: 400px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4500;
+        }
+
+        img {
+            width: 220px;
+            height: 220px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            background: #ff6600;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 90%;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background: #e65c00;
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(0,0,0,0.3);
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 90%;
+        }
+    </style>
+    <script>
+        function confirmPayment() {
+            alert("Screenshot Uploaded! Payment processing will be handled separately.");
+            setTimeout(function() {
+                window.location.href = "order.html";
+            }, 500); // Redirects after 0.5 sec
+        }
+    </script>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>🔗 Scan & Pay</h2>
+        <img id="qr-code" src="http://localhost/img/qr-code.jpeg" alt="UPI QR Code">
+        <p>This is the official Dairy Products UPI QR code. <br> Please complete the payment to confirm your order.</p>
+        <label>Upload Payment Screenshot:</label>
+        <input type="file" name="payment_screenshot" accept="image/*" required><br><br>
+        <button class="btn" onclick="confirmPayment()">Confirm</button>
+        <a href="cart.html"><button class="btn">Back to Cart</button></a>
+    </div>
+</body>
+</html>

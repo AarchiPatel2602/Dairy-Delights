@@ -1,0 +1,161 @@
+<?php
+include('db1.php');  // Include the database connection
+
+// Fetch products from the database
+$query = "SELECT id, name FROM products";
+$result = $conn->query($query);
+
+// Check if the query was successful
+if (!$result) {
+    die("Error fetching products from the database: " . $conn->error);
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Product</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        /* Container Styling */
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        /* Heading Styling */
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Label Styling */
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            text-align: left;
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        /* Input and Textarea Styling */
+        input[type="file"],
+        select,
+        textarea {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Textarea Specific Styling */
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Submit Button Styling */
+        button {
+            padding: 12px 25px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Error Message Styling */
+        #error-message {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Return Product</h2>
+        <form id="return-form" enctype="multipart/form-data">
+            <label for="product_id">Select Product:</label>
+            <select id="product_id" name="product_id" required>
+                <option value="">--Select a Product--</option>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                <?php endwhile; ?>
+            </select><br><br>
+
+            <label for="fault_description">Fault Description:</label><br>
+            <textarea id="fault_description" name="fault_description" rows="4" cols="50" required></textarea><br><br>
+
+            <label for="fault_image">Upload Fault Image:</label>
+            <input type="file" id="fault_image" name="fault_image" accept="image/*" required><br><br>
+
+            <button type="submit">Submit Return Request</button>
+        </form>
+        <p id="error-message" style="color: red;"></p>
+    </div>
+
+    <script>
+        document.getElementById('return-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+
+            try {
+                const response = await fetch('submit_return.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Return request submitted successfully!');
+                    window.location.href = 'HOME.html';  // Redirect to home page
+                } else {
+                    document.getElementById('error-message').innerText = data.message || 'There was an error submitting your return request.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('error-message').innerText = 'An error occurred. Please try again later.';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="order-style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="confirmation-container">
+        <div class="loading-spinner"></div>
+        <h2 id="confirmation-message">Processing your order...</h2>
+    
+        <button id="done-button" onclick="submitOrder()" style="display: none;">Done</button>
+        <button id="download-bill-btn" onclick="downloadBill()" style="display: none;">Download Bill (PDF)</button>
+    </div>
+    <script>
+        function updateOrderTracker(status) {
+            const steps = ['ordered', 'shipped', 'out', 'delivered'];
+            steps.forEach((step, index) => {
+                const stepDiv = document.getElementById(`step-${step}`);
+                if (index <= status) {
+                    stepDiv.classList.add('active');
+                } else {
+                    stepDiv.classList.remove('active');
+                }
+            });
+        
+            const bike = document.querySelector('.bike');
+            const leftPercent = status * 33 + 2; // Position bike
+            bike.style.left = `${leftPercent}%`;
+        }
+        
+        // Example fetch from DB
+        function fetchOrderStatus(orderId) {
+            fetch(`get_order_status.php?order_id=${orderId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        updateOrderTracker(data.status); // 0 to 3
+                    }
+                });
+        }
+        
+        // Call this on page load with actual order ID
+        fetchOrderStatus(123); // Replace 123 with dynamic order_id
+        </script>
+        
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(() => {
+                document.querySelector(".loading-spinner").style.display = "none";
+                document.getElementById("confirmation-message").innerText = "🎉 Order Confirmed Successfully!";
+                document.getElementById("done-button").style.display = "block";
+                document.getElementById("download-bill-btn").style.display = "block"; // Show download bill button
+            }, 3000);
+        });
+
+        function submitOrder() {
+            let orderDetails = JSON.parse(localStorage.getItem("pendingOrder"));
+
+            if (!orderDetails) {
+                alert("No order found!");
+                window.location.href = "HOME.html"; // Redirect to products page
+                return;
+            }
+
+            fetch("http://localhost/Dairy_product/save_order.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderDetails)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server Response:", data);
+                if (data.error) {
+                    alert("Error saving order: " + data.error);
+                } else {
+                    alert("Order successfully placed!");
+                    localStorage.removeItem("cart");
+                    localStorage.removeItem("pendingOrder");
+                    window.location.href = "HOME.html"; // Redirect to products page
+                }
+            })
+            .catch(error => {
+                console.error("Fetch Error:", error);
+                alert("Error saving order!");
+            });
+        }
+
+        function downloadBill() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    const orderDetails = JSON.parse(localStorage.getItem("pendingOrder"));
+    if (!orderDetails) {
+        alert("No order details found!");
+        return;
+    }
+
+    // Header Theme
+    pdf.setFillColor(255, 165, 0); // Soft orange
+    pdf.rect(0, 0, 210, 30, 'F');
+
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(20);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Dairy Delight - Invoice", 105, 20, { align: "center" });
+
+    // Business Info
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(12);
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Phone: +91 8469434870", 10, 40);
+    pdf.text("Address: L.J Polytechnic, Ahmedabad", 10, 48);
+
+    // Draw separator line
+    pdf.setDrawColor(255, 165, 0);
+    pdf.line(10, 52, 200, 52);
+
+    let y = 60;
+    pdf.setFontSize(14);
+    pdf.setTextColor(0);
+    pdf.text(" Product Details:", 10, y);
+    y += 10;
+
+    pdf.setFontSize(12);
+    pdf.setFillColor(255, 243, 224); // very light orange
+
+    // Table Header
+    pdf.setFont("helvetica", "bold");
+    pdf.rect(10, y, 190, 10, 'F');
+    pdf.text("S.No", 12, y + 7);
+    pdf.text("Product Name", 30, y + 7);
+    pdf.text("Price", 110, y + 7);
+    pdf.text("Qty", 140, y + 7);
+    pdf.text("Total", 170, y + 7);
+
+    // Table Content
+    y += 12;
+    pdf.setFont("helvetica", "normal");
+
+    orderDetails.products.forEach((item, index) => {
+        pdf.text(`${index + 1}`, 12, y);
+        pdf.text(item.name, 30, y);
+        pdf.text(`₹${item.price}`, 110, y);
+        pdf.text(`${item.quantity}`, 140, y);
+        pdf.text(`₹${item.total}`, 170, y);
+        y += 10;
+    });
+
+    // Summary
+    y += 5;
+    pdf.setDrawColor(255, 165, 0);
+    pdf.line(10, y, 200, y);
+    y += 10;
+
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(13);
+    pdf.text(`Subtotal: ₹${orderDetails.total}`, 10, y);
+    y += 8;
+    pdf.text(`Payment Method: ${orderDetails.paymentMethod}`, 10, y);
+    y += 8;
+    pdf.setTextColor(255, 87, 34); // darker orange
+    pdf.setFontSize(15);
+    pdf.text(`Grand Total: ₹${orderDetails.total}`, 10, y);
+
+    // Footer
+    y += 20;
+    pdf.setTextColor(100);
+    pdf.setFontSize(10);
+    pdf.text("Thank you for shopping with Dairy Delight!", 10, y);
+    pdf.text("Visit again!", 10, y + 6);
+
+    pdf.save("Dairy_Delight_Bill.pdf");
+}
+
+    </script>
+
+</body>
+</html>

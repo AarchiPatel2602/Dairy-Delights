@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="cart-style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+       
+       body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff8f1;
+            padding: 20px;
+            color: #444;
+        }
+
+        .cart-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff3e6;
+            padding: 25px;  
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(255, 132, 0, 0.2);
+            animation: fadeSlideIn 0.6s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: #080807;
+            font-size: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #ffd199;
+            padding: 14px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #ffe0b3;
+            color: #333;
+        }
+
+        .quantity button {
+            background: #ffa94d;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity button:hover {
+            transform: scale(1.1);
+            background: #ff944d;
+        }
+
+        .remove-btn {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #e63946;
+        }
+
+        .bill-summary {
+            background: #fff1dc;
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 25px;
+            box-shadow: 0 6px 16px rgba(255, 149, 0, 0.2);
+            animation: fadeSlideIn 0.6s ease-in-out;
+        }
+
+        .bill-summary h2 {
+            font-size: 24px;
+            margin-bottom: 18px;
+            color: #ff8800;
+        }
+
+        .summary-box {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 3px 10px rgba(255, 140, 0, 0.15);
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ffa94d, #ff7f50);
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background: linear-gradient(135deg, #ff7f50, #ffa94d);
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff7f0;
+            width: 350px;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .modal h2 {
+            font-size: 22px;
+            color: #cca06e;
+            margin-bottom: 15px;
+        }
+
+        .modal label {
+            display: block;
+            font-size: 16px;
+            color: #333;
+            background: #fff0e0;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .modal label:hover {
+            background: #ffe6cc;
+        }
+
+        .modal input {
+            margin-right: 10px;
+        }
+
+        .modal button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal button:first-of-type {
+            background: #ffa94d;
+            color: white;
+        }
+
+        .modal button:first-of-type:hover {
+            background: #ff7f50;
+            transform: scale(1.05);
+        }
+
+        .modal button:last-of-type {
+            background: #ffe6e6;
+            color: #a94442;
+        }
+
+        .modal button:last-of-type:hover {
+            background: #ff9999;
+            transform: scale(1.05);
+        }
+
+        .modal::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .coupon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff2e6;
+            padding: 10px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 360px;
+            margin: 25px auto;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.1);
+        }
+
+        .coupon-container input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ffd9b3;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .coupon-container input:focus {
+            border-color: #ff8800;
+        }
+
+        .coupon-container button {
+            padding: 10px 16px;
+            font-size: 16px;
+            border: none;
+            background: #ff944d;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s;
+            margin-left: 10px;
+        }
+
+        .coupon-container button:hover {
+            background: #ff7f50;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }  
+        .cart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff1e6;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15);
+    margin-bottom: 20px;
+    animation: fadeSlideIn 0.6s ease-in-out;
+}
+
+.cart-header h1 {
+    font-size: 26px;
+    color: #ff7f50;
+    margin: 0;
+}
+
+.back-btn {
+    background: #ffa94d;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #ff7f50;
+    transform: scale(1.05);
+}
+ 
+    </style>
+    
+</head>
+<body>
+   <!-- Add this block where you want the address to appear -->
+<div id="user-address-display" style="background:#fff0e1;padding:20px;border-radius:12px;margin:20px;">
+    <h3 style="color:#ff6600;">🚚 Delivery Address</h3>
+    <p id="addressText" style="font-size:16px;line-height:1.6;">Loading address...</p>
+</div>
+
+<script>
+    const userId = sessionStorage.getItem("user_id");
+
+    if (userId) {
+        fetch(`get_address.php?user_id=${userId}`) 
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const a = data.address;
+                    const formatted = `
+                        <strong>${a.fullname}</strong><br>
+                        ${a.house}, ${a.street}, ${a.area}<br>
+                        ${a.city} - ${a.pincode}, ${a.state}
+                    `;
+                    document.getElementById("addressText").innerHTML = formatted;
+                } else {
+                    document.getElementById("addressText").innerHTML = "No address found. Please update your profile.";
+                }
+            });
+    } else {
+        document.getElementById("addressText").innerHTML = "User not logged in.";
+    }
+</script>
+
+    
+    <header class="cart-header">
+        <button class="back-btn" onclick="window.history.back();">⬅ Back</button>
+        <h1>Your Shopping Cart</h1>
+    </header>
+
+    <div class="cart-container">
+        <div id="cart-empty" class="cart-empty">Your cart is empty.</div>
+
+        <table id="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items"></tbody>
+        </table>
+
+        <div class="coupon-container">
+            <input type="text" id="coupon-code" placeholder="Enter Coupon Code">
+            <button onclick="applyCoupon()">Apply</button>
+        </div>
+
+        <div class="bill-summary">
+            <h3>Bill Summary</h3>
+            <p><strong>Subtotal:</strong> ₹<span id="subtotal">0.00</span></p>
+            <p><strong>Discount:</strong> ₹<span id="discount">0.00</span></p>
+            <p><strong>Tax (18% GST):</strong> ₹<span id="tax">0.00</span></p>
+            <h2>Total Payable: ₹<span id="total">0.00</span></h2>
+            <!-- <button onclick="downloadBill()">Download Bill (PDF)</button> -->
+        </div>
+
+        <button class="checkout-btn" onclick="openPaymentModal()">Proceed to Payment</button>
+    </div>
+
+    <div id="payment-modal" class="modal">
+        <h2>Select Payment Method</h2>
+        <form id="paymentForm">
+            <label><input type="radio" name="payment" value="UPI"> UPI</label>
+            <label><input type="radio" name="payment" value="Cash"> Cash on Delivery</label>
+        </form>
+        
+        <!-- <script>
+            function redirectToPayment() {
+                window.location.href = "upi-payment.html"; // Redirect to order.php when UPI is selected
+            }
+        </script> -->
+        
+        <button onclick="confirmOrder()">Confirm Order</button>
+        <button onclick="closePaymentModal()">Cancel</button>
+    </div>
+
+    <script src="cart.js"></script>
+    
+</body>
+</html>

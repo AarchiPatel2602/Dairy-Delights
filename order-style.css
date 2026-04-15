@@ -1,0 +1,103 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom right, #fff4e1, #ffe0b2);
+    padding: 50px;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Container Styling */
+.confirmation-container {
+    background: #fff8f1;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(255, 153, 51, 0.15);
+    display: inline-block;
+    max-width: 420px;
+    animation: slideUp 0.6s ease-in-out;
+    transition: transform 0.3s ease;
+}
+
+.confirmation-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(255, 153, 51, 0.25);
+}
+
+/* Spinner */
+.loading-spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #ff9800;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: 25px auto;
+}
+
+/* Confirmation Message */
+#confirmation-message {
+    font-size: 20px;
+    color: #ff6f00;
+    margin-top: 15px;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Buttons */
+#done-button, #download-bill-btn {
+    background: linear-gradient(135deg, #ff9800, #ff5722);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 12px 5px 0 5px;
+    box-shadow: 0 4px 12px rgba(255, 87, 34, 0.2);
+    transition: all 0.3s ease-in-out;
+    display: none;
+}
+
+#done-button:hover, #download-bill-btn:hover {
+    background: linear-gradient(135deg, #ff7043, #e64a19);
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(255, 87, 34, 0.3);
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.enjoy-btn {
+    background: linear-gradient(135deg, #ff914d, #ff6e40);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(255, 110, 64, 0.3);
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.enjoy-btn:hover {
+    background: linear-gradient(135deg, #ff6e40, #ff914d);
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(255, 110, 64, 0.4);
+}

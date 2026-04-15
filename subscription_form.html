@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 100px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            color: #555;
+            display: block;
+        }
+
+        select, input[type="number"], input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .back-btn, .manage-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .back-btn:hover, .manage-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Modal for subscription success */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .modal-content button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Choose Your Subscription</h2>
+        <form id="subscriptionForm">
+            <div class="form-group">
+                <label for="product_name">Choose Product</label>
+                <select name="product_name" id="product_name" required>
+                    <option value="milk">Milk</option>
+                    <option value="cheese">Cheese</option>
+                    <option value="yogurt">Yogurt</option>
+                    <option value="butter">Butter</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" name="quantity" id="quantity" required min="1" step="1">
+            </div>
+
+            <div class="form-group">
+                <label for="frequency">Frequency</label>
+                <select name="frequency" id="frequency" required>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Subscribe">
+        </form>
+
+        <div class="button-container">
+            <a href="your_subscriptions.php" class="back-btn">Back to Subscriptions</a>
+        </div>
+    </div>
+
+    <!-- Modal for subscription success -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <h3>Subscription Successful!</h3>
+            <p>Your subscription has been successfully processed.</p>
+            <button id="redirectBtn">Okay</button>
+        </div>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('subscriptionForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            // Create a FormData object from the form
+            const formData = new FormData(this);
+
+            // Send the form data via AJAX
+            fetch('subscribe.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show the modal on successful subscription
+                    document.getElementById('successModal').style.display = 'flex';
+                } else {
+                    alert('Subscription failed: ' + data.message);  // Show error if subscription failed
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Redirect to homepage when "Okay" button is clicked
+        document.getElementById('redirectBtn').addEventListener('click', function() {
+            window.location.href = 'home.php';
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+/* General Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Add New Product Button */
+.add-product-link {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.add-product-link .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.add-product-link .btn:hover {
+    background-color: #45a049;
+}
+
+/* Table Styles */
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.product-table th, .product-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style the table header */
+.blue-header th {
+    background-color: #007BFF; /* Match Back to Admin Panel button */
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Style for buttons */
+.btn {
+    display: inline-block;
+    background-color: #007BFF; /* Blue color */
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Actions Column Styles */
+.actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px; /* Space between the buttons */
+}
+
+.actions .btn {
+    background-color: #008CBA;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.actions .btn:hover {
+    background-color: #007bb5;
+}
+
+.actions .btn:active {
+    background-color: #005f73;
+}
+
+/* Adjust image column size */
+.image-column {
+    width: 150px; /* Increase size for better visibility */
+    text-align: center;
+}
+
+.image-column img {
+    width: 100px; /* Adjust image size */
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Adjust actions column */
+.actions-column {
+    width: 120px; /* Reduce size to fit buttons */
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-table th, .product-table td {
+        padding: 8px;
+    }
+
+    .add-product-link {
+        text-align: left;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Form and button styles */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+form a {
+    text-decoration: none;
+    color: #007bff;
+    margin-top: 10px;
+    text-align: center;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+
+/* Style for the admin panel button */
+.admin-button {
+    margin: 20px 0;
+}
+
+.admin-button .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.admin-button .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .navigation ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navigation ul li a {
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        font-size: 16px;
+    }
+}

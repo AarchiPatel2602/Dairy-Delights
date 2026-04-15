@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff1e6, #ffd6a5);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            padding: 40px;
+            gap: 40px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #ff8800;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease-in-out, transform 0.3s;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #cc6b00;
+            transform: scale(1.05);
+        }
+
+        .profile-container {
+            flex: 1;
+            background: #fff5ee;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .profile-pic {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid #ffa94d;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.07);
+        }
+
+        .profile-info {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .profile-info label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .profile-info input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ffcc99;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .logout-btn {
+            background: #ff4d4d;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            margin-top: 15px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .logout-btn:hover {
+            background: #e63b3b;
+            transform: scale(1.05);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sidebar (Address section) */
+        .sidebar {
+            width: 350px;
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            overflow-y: auto;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .sidebar h3 {
+            color: #ff6600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .address-info {
+            margin-bottom: 15px;
+        }
+
+        .address-info label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .address-info input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ffcc99;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-top: 5px;
+        }
+
+        .save-address-btn {
+            background: #ffa94d;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .save-address-btn:hover {
+            background: #ff8700;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goToHome()">← Home</button>
+
+    <div class="container">
+        <!-- Profile Center -->
+        <div class="profile-container">
+            <h2>Hello, <span id="user-name">User</span> 👋</h2>
+
+            <!-- Profile picture upload -->
+            <input type="file" id="profile-pic-upload" accept="image/*" onchange="uploadProfilePic(event)">
+            <label for="profile-pic-upload">
+                <img src="default-profile.png" id="profile-pic" class="profile-pic" alt="Profile Picture">
+            </label>
+
+            <div class="profile-info">
+                <label>Name:</label>
+                <input type="text" id="user-realname" placeholder="Your Name">
+            </div>
+
+            <div class="profile-info">
+                <label>Email:</label>
+                <input type="text" id="user-email" readonly>
+            </div>
+
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Sidebar: Address -->
+        <div class="sidebar">
+            <h3>📦 Delivery Address</h3>
+
+            <div class="address-info">
+                <label>Full Name:</label>
+                <input type="text" id="address-fullname" placeholder="e.g. Ayush">
+            </div>
+
+            <div class="address-info">
+                <label>House/Flat No.:</label>
+                <input type="text" id="address-house" placeholder="e.g. 23B">
+            </div>
+
+            <div class="address-info">
+                <label>Street:</label>
+                <input type="text" id="address-street" placeholder="e.g. SG Road">
+            </div>
+
+            <div class="address-info">
+                <label>Area/Colony:</label>
+                <input type="text" id="address-area" placeholder="e.g. Green Park">
+            </div>
+
+            <div class="address-info">
+                <label>City:</label>
+                <input type="text" id="address-city" placeholder="e.g. Ahmedabad">
+            </div>
+
+            <div class="address-info">
+                <label>Pincode:</label>
+                <input type="text" id="address-pincode" placeholder="e.g. 400001">
+            </div>
+
+            <div class="address-info">
+                <label>State:</label>
+                <input type="text" id="address-state" placeholder="e.g. Gujarat">
+            </div>
+
+            <button class="save-address-btn" onclick="saveAddress()">Save Address</button>
+        </div>
+    </div>
+
+    <script>
+        function goToHome() {
+            window.location.href = "home.php";
+        }
+
+        $(document).ready(function () {
+            $.ajax({
+                url: 'get_user.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        $('#user-name').text(response.user.name);
+                        $('#user-realname').val(response.user.name);
+                        $('#user-email').val(response.user.email);
+                        sessionStorage.setItem("user_id", response.user.id);
+
+                        // Load profile picture from session storage if exists
+                        if (sessionStorage.getItem("profilePic")) {
+                            $('#profile-pic').attr("src", sessionStorage.getItem("profilePic"));
+                        }
+                    } else {
+                        alert("Please login to continue.");
+                        window.location.href = "login.html";
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Fetch error:", xhr.responseText);
+                }
+            });
+        });
+
+        function uploadProfilePic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileType = file.type.split('/')[0];
+                if (fileType !== 'image') {
+                    alert("Please upload a valid image file.");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    $('#profile-pic').attr('src', reader.result);
+                    sessionStorage.setItem('profilePic', reader.result); // Save the image URL to sessionStorage
+                };
+                reader.readAsDataURL(file); // Read the file as a base64 URL
+            }
+        }
+
+        function saveAddress() {
+            let addressData = {
+                user_id: sessionStorage.getItem("user_id"),
+                fullname: $("#address-fullname").val(),
+                house: $("#address-house").val(),
+                street: $("#address-street").val(),
+                area: $("#address-area").val(),
+                city: $("#address-city").val(),
+                pincode: $("#address-pincode").val(),
+                state: $("#address-state").val()
+            };
+
+            // Ensure required fields are filled
+            if (!addressData.fullname || !addressData.house || !addressData.city || !addressData.pincode) {
+                alert("Please fill in required address fields.");
+                return;
+            }
+
+            $.ajax({
+                url: "save_address.php",
+                type: "POST",
+                dataType: "json",
+                data: addressData,
+                success: function (response) {
+                    if (response.success) {
+                        // Save address in localStorage for future use
+                        localStorage.setItem("userAddress", JSON.stringify(addressData));
+                        alert("Address saved successfully!");
+                        window.location.href = "home.php"; // Redirect to home
+                    } else {
+                        alert("Failed to save address: " + response.message);
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Address error:", xhr.responseText);
+                    alert("An error occurred while saving the address.");
+                }
+            });
+        }
+
+        function logout() {
+            $.ajax({
+                url: "logout.php",
+                type: "GET",
+                success: function () {
+                    sessionStorage.clear();
+                    alert("You have logged out!");
+                    window.location.href = "login.html";
+                },
+                error: function (xhr) {
+                    console.error("Logout error:", xhr.responseText);
+                    alert("Error during logout.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
